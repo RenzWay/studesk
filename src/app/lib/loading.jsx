@@ -1,5 +1,6 @@
 "use client";
 import {motion} from "framer-motion";
+import { FormattedMessage } from "react-intl";
 
 export function LoadingDashboard() {
     return (
@@ -35,7 +36,7 @@ export function LoadingDashboard() {
                 transition={{repeat: Infinity, duration: 2}}
                 className="mt-12 text-gray-700 dark:text-gray-300 font-semibold text-lg tracking-wide"
             >
-                Loading Dashboard...
+                <FormattedMessage id="dashboard.loading" />
             </motion.p>
         </div>
     );

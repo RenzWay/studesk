@@ -12,6 +12,7 @@ import TaskItem from "@tiptap/extension-task-item";
 import Placeholder from "@tiptap/extension-placeholder";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { HeadingTool } from "@/app/lib/headingTool";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export function TiptapEditor({
   content = "",
@@ -23,6 +24,8 @@ export function TiptapEditor({
   maxHeight = "none",
   showToolbar = true,
 }) {
+  const intl = useIntl();
+
   // Keep extension instances stable while the parent rerenders on each edit.
   // StarterKit already provides heading, link, and underline, so disable
   // those here before registering the configured versions below.
@@ -91,6 +94,9 @@ export function TiptapEditor({
         <BubbleMenu className="z-9999" editor={editor}>
           <div className="flex flex-wrap gap-1 p-2 rounded-lg shadow-lg bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.bold" })}
+              title={intl.formatMessage({ id: "notes.editor.bold" })}
               onClick={() => editor.chain().focus().toggleBold().run()}
               className={`px-3 py-1.5 text-sm font-semibold rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("bold") ? "bg-gray-200 dark:bg-gray-600" : ""
@@ -99,6 +105,9 @@ export function TiptapEditor({
               B
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.italic" })}
+              title={intl.formatMessage({ id: "notes.editor.italic" })}
               onClick={() => editor.chain().focus().toggleItalic().run()}
               className={`px-3 py-1.5 text-sm italic rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("italic") ? "bg-gray-200 dark:bg-gray-600" : ""
@@ -107,6 +116,9 @@ export function TiptapEditor({
               I
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.underline" })}
+              title={intl.formatMessage({ id: "notes.editor.underline" })}
               onClick={() => editor.chain().focus().toggleUnderline().run()}
               className={`px-3 py-1.5 text-sm underline rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("underline")
@@ -117,6 +129,9 @@ export function TiptapEditor({
               U
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.strike" })}
+              title={intl.formatMessage({ id: "notes.editor.strike" })}
               onClick={() => editor.chain().focus().toggleStrike().run()}
               className={`px-3 py-1.5 text-sm line-through rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("strike") ? "bg-gray-200 dark:bg-gray-600" : ""
@@ -128,6 +143,9 @@ export function TiptapEditor({
             <div className="w-px bg-gray-300 dark:bg-gray-600 mx-1"></div>
 
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.highlight" })}
+              title={intl.formatMessage({ id: "notes.editor.highlight" })}
               onClick={() => editor.chain().focus().toggleHighlight().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-yellow-100 dark:hover:bg-yellow-700 transition-colors ${
                 editor.isActive("highlight")
@@ -141,6 +159,9 @@ export function TiptapEditor({
             <div className="w-px bg-gray-300 dark:bg-gray-600 mx-1"></div>
 
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.bulletList" })}
+              title={intl.formatMessage({ id: "notes.editor.bulletList" })}
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("bulletList")
@@ -148,9 +169,12 @@ export function TiptapEditor({
                   : ""
               }`}
             >
-              • List
+              • <FormattedMessage id="notes.editor.list" />
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.orderedList" })}
+              title={intl.formatMessage({ id: "notes.editor.orderedList" })}
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("orderedList")
@@ -158,9 +182,12 @@ export function TiptapEditor({
                   : ""
               }`}
             >
-              1. List
+              1. <FormattedMessage id="notes.editor.list" />
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.quote" })}
+              title={intl.formatMessage({ id: "notes.editor.quote" })}
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("blockquote")
@@ -171,6 +198,9 @@ export function TiptapEditor({
               &quot;
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.codeBlock" })}
+              title={intl.formatMessage({ id: "notes.editor.codeBlock" })}
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("codeBlock")
@@ -181,6 +211,9 @@ export function TiptapEditor({
               &lt;/&gt;
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.taskList" })}
+              title={intl.formatMessage({ id: "notes.editor.taskList" })}
               onClick={() => editor.chain().focus().toggleTaskList().run()}
               className={`px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
                 editor.isActive("taskList")
@@ -194,6 +227,9 @@ export function TiptapEditor({
             <div className="w-px bg-gray-300 dark:bg-gray-600 mx-1"></div>
 
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.undo" })}
+              title={intl.formatMessage({ id: "notes.editor.undo" })}
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().undo()}
               className="px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -201,6 +237,9 @@ export function TiptapEditor({
               ↶
             </button>
             <button
+              type="button"
+              aria-label={intl.formatMessage({ id: "notes.editor.redo" })}
+              title={intl.formatMessage({ id: "notes.editor.redo" })}
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().redo()}
               className="px-3 py-1.5 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { FormattedMessage, useIntl } from "react-intl";
 import {
   ArrowRight,
   LayoutDashboard,
@@ -14,6 +15,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
+import { getAuthErrorMessageId } from "@/lib/authErrorMessage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -21,8 +23,9 @@ import ModelFirestore from "@/model/model";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const intl = useIntl();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const [error, setError] = useState("");
+  const [errorId, setErrorId] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -32,7 +35,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorId("");
     setLoading(true);
 
     try {
@@ -43,23 +46,25 @@ export default function RegisterPage() {
       );
       await updateProfile(credential.user, { displayName: form.name });
       router.push("/pages/dashboard");
-    } catch (err) {
-      setError("Registrasi gagal. Cek email dan password kamu.");
+    } catch (error) {
+      setErrorId(
+        getAuthErrorMessageId(error, "auth.register.error.credentials"),
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleRegister = async () => {
-    setError("");
+    setErrorId("");
     setGoogleLoading(true);
 
     try {
       const model = new ModelFirestore();
       await model.loginWithGoogle();
       router.push("/pages/dashboard");
-    } catch (err) {
-      setError("Daftar dengan Google gagal. Coba lagi.");
+    } catch (error) {
+      setErrorId(getAuthErrorMessageId(error, "auth.register.error.google"));
     } finally {
       setGoogleLoading(false);
     }
@@ -72,7 +77,8 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="w-full max-w-md">
             <Link
               href="/"
-              className="mb-10 flex items-center gap-3 text-sm font-semibold lg:hidden">
+              className="mb-10 flex items-center gap-3 text-sm font-semibold lg:hidden"
+            >
               <span className="flex size-9 items-center justify-center rounded-md bg-slate-950 text-white">
                 <LayoutDashboard className="size-4" />
               </span>
@@ -80,20 +86,19 @@ export default function RegisterPage() {
             </Link>
 
             <p className="text-sm font-bold uppercase text-emerald-600">
-              Start clean
+              <FormattedMessage id="auth.register.badge" />
             </p>
             <h2 className="mt-2 text-3xl font-bold text-slate-950">
-              Buat workspace baru
+              <FormattedMessage id="auth.register.title" />
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Satu akun untuk mengatur tugas, jadwal, dan catatan kuliah dari
-              satu tempat.
+              <FormattedMessage id="auth.register.description" />
             </p>
 
             <div className="mt-8 space-y-5">
               <div>
                 <Label htmlFor="name" className="text-slate-700">
-                  Nama
+                  <FormattedMessage id="auth.fields.name" />
                 </Label>
                 <div className="relative mt-2">
                   <UserRound className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -105,14 +110,16 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     required
                     className="h-11 pl-10"
-                    placeholder="Nama kamu"
+                    placeholder={intl.formatMessage({
+                      id: "auth.fields.namePlaceholder",
+                    })}
                   />
                 </div>
               </div>
 
               <div>
                 <Label htmlFor="email" className="text-slate-700">
-                  Email
+                  <FormattedMessage id="auth.fields.email" />
                 </Label>
                 <div className="relative mt-2">
                   <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -124,14 +131,16 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     required
                     className="h-11 pl-10"
-                    placeholder="nama@email.com"
+                    placeholder={intl.formatMessage({
+                      id: "auth.fields.emailPlaceholder",
+                    })}
                   />
                 </div>
               </div>
 
               <div>
                 <Label htmlFor="password" className="text-slate-700">
-                  Password
+                  <FormattedMessage id="auth.fields.password" />
                 </Label>
                 <Input
                   id="password"
@@ -141,32 +150,35 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   required
                   className="mt-2 h-11"
-                  placeholder="Minimal 6 karakter"
+                  placeholder={intl.formatMessage({
+                    id: "auth.register.passwordPlaceholder",
+                  })}
                 />
               </div>
             </div>
 
-            {error && (
+            {errorId && (
               <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                {error}
+                <FormattedMessage id={errorId} />
               </p>
             )}
 
             <Button
               type="submit"
               disabled={loading || googleLoading}
-              className="mt-6 h-11 w-full">
+              className="mt-6 h-11 w-full"
+            >
               {loading ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
-                "Buat akun"
+                <FormattedMessage id="auth.register.submit" />
               )}
               {!loading && <ArrowRight className="size-4" />}
             </Button>
 
             <div className="my-6 flex items-center gap-3 text-xs font-medium uppercase text-slate-400">
               <span className="h-px flex-1 bg-slate-200" />
-              atau
+              <FormattedMessage id="auth.common.or" />
               <span className="h-px flex-1 bg-slate-200" />
             </div>
 
@@ -175,21 +187,23 @@ export default function RegisterPage() {
               variant="outline"
               onClick={handleGoogleRegister}
               disabled={loading || googleLoading}
-              className="h-11 w-full hover:text-slate-500">
+              className="h-11 w-full hover:text-slate-500"
+            >
               {googleLoading ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <Image src="/google.png" alt="Google" width={18} height={18} />
               )}
-              Daftar dengan Google
+              <FormattedMessage id="auth.register.google" />
             </Button>
 
             <p className="mt-8 text-center text-sm text-slate-600">
-              Sudah punya akun?{" "}
+              <FormattedMessage id="auth.register.hasAccount" />{" "}
               <Link
                 href="/auth/login"
-                className="font-semibold text-sky-700 hover:text-sky-800">
-                Masuk
+                className="font-semibold text-sky-700 hover:text-sky-800"
+              >
+                <FormattedMessage id="auth.register.loginLink" />
               </Link>
             </p>
           </form>
@@ -198,7 +212,8 @@ export default function RegisterPage() {
         <div className="hidden bg-slate-950 p-8 text-white lg:flex lg:flex-col">
           <Link
             href="/"
-            className="flex items-center gap-3 text-sm font-semibold">
+            className="flex items-center gap-3 text-sm font-semibold"
+          >
             <span className="flex size-9 items-center justify-center rounded-md bg-white text-slate-950">
               <LayoutDashboard className="size-4" />
             </span>
@@ -208,20 +223,21 @@ export default function RegisterPage() {
           <div className="my-auto">
             <div className="mb-6 inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/10 px-3 py-1 text-sm text-emerald-100">
               <ShieldCheck className="size-4" />
-              Dibuat untuk rutinitas kuliah
+              <FormattedMessage id="auth.register.sidebar.badge" />
             </div>
             <h1 className="max-w-md text-4xl font-bold leading-tight">
-              Mulai dari satu tugas, lalu rapikan hari berikutnya.
+              <FormattedMessage id="auth.register.sidebar.title" />
             </h1>
             <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
-              Workspace sederhana untuk mencatat hal penting tanpa membuat
-              proses belajar terasa berat.
+              <FormattedMessage id="auth.register.sidebar.description" />
             </p>
 
             <div className="mt-8 overflow-hidden rounded-lg border border-white/10 bg-white/5">
               <Image
                 src="/ss/task.png"
-                alt="Preview task Mahasiswa Center"
+                alt={intl.formatMessage({
+                  id: "auth.register.sidebar.imageAlt",
+                })}
                 width={900}
                 height={560}
                 priority

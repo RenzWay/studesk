@@ -7,6 +7,8 @@ import type { Timestamp } from "firebase/firestore";
 import { CalendarDays, CheckSquare, NotebookPen, type LucideIcon } from "lucide-react";
 import { auth } from "@/firebase/firebase";
 import ModelFirestore from "@/model/model";
+import { useLocale } from "@/providers/IntlProvider";
+import { useIntl } from "react-intl";
 
 export type DashboardDateValue = string | number | Date | Timestamp;
 
@@ -30,6 +32,7 @@ export type DashboardScheduleItem = {
 };
 
 type MetricCard = {
+  id: string;
   label: string;
   value: number;
   helper: string;
@@ -41,6 +44,8 @@ const Model = new ModelFirestore();
 
 export function useDashboard() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const intl = useIntl();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [tasks, setTasks] = useState<DashboardTask[]>([]);
@@ -83,14 +88,15 @@ export function useDashboard() {
     return () => unsubscribe();
   }, [router]);
 
-  const formattedDate = dateTime.toLocaleString("id-ID", {
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
+  const formattedDate = dateTime.toLocaleString(dateLocale, {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  const formattedTime = dateTime.toLocaleTimeString("id-ID", {
+  const formattedTime = dateTime.toLocaleTimeString(dateLocale, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -116,23 +122,32 @@ export function useDashboard() {
 
   const metricCards: MetricCard[] = [
     {
-      label: "Active Tasks",
+      id: "activeTasks",
+      label: intl.formatMessage({ id: "dashboard.metrics.activeTasks" }),
       value: activeTasks.length,
-      helper: `${completedTasks.length} completed`,
+      helper: intl.formatMessage(
+        { id: "dashboard.metrics.completed" },
+        { count: completedTasks.length },
+      ),
       icon: CheckSquare,
       color: "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900/70 dark:bg-sky-950/40 dark:text-sky-300",
     },
     {
-      label: "Today Schedule",
+      id: "todaySchedule",
+      label: intl.formatMessage({ id: "dashboard.metrics.todaySchedule" }),
       value: todaySchedule.length,
-      helper: `${schedule.length} total agenda`,
+      helper: intl.formatMessage(
+        { id: "dashboard.metrics.agendaTotal" },
+        { count: schedule.length },
+      ),
       icon: CalendarDays,
       color: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300",
     },
     {
-      label: "Notes",
+      id: "notes",
+      label: intl.formatMessage({ id: "dashboard.metrics.notes" }),
       value: notes.length,
-      helper: "study archive",
+      helper: intl.formatMessage({ id: "dashboard.metrics.studyArchive" }),
       icon: NotebookPen,
       color: "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900/70 dark:bg-violet-950/40 dark:text-violet-300",
     },

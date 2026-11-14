@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { FormattedMessage, useIntl } from "react-intl";
 import {
   ArrowRight,
   LayoutDashboard,
@@ -13,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
+import { getAuthErrorMessageId } from "@/lib/authErrorMessage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,8 +22,9 @@ import ModelFirestore from "@/model/model";
 
 export default function LoginPage() {
   const router = useRouter();
+  const intl = useIntl();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+  const [errorId, setErrorId] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -31,21 +34,21 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorId("");
     setLoading(true);
 
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
       router.push("/pages/dashboard");
-    } catch (err) {
-      setError("Email atau password belum cocok.");
+    } catch (error) {
+      setErrorId(getAuthErrorMessageId(error, "auth.login.error.credentials"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setError("");
+    setErrorId("");
     setGoogleLoading(true);
 
     try {
@@ -53,8 +56,7 @@ export default function LoginPage() {
       await model.loginWithGoogle();
       router.push("/pages/dashboard");
     } catch (error) {
-      console.error(error);
-      setError("Login dengan Google gagal. Coba lagi.");
+      setErrorId(getAuthErrorMessageId(error, "auth.login.error.google"));
     } finally {
       setGoogleLoading(false);
     }
@@ -66,7 +68,8 @@ export default function LoginPage() {
         <div className="hidden bg-slate-950 p-8 text-white lg:flex lg:flex-col">
           <Link
             href="/"
-            className="flex items-center gap-3 text-sm font-semibold">
+            className="flex items-center gap-3 text-sm font-semibold"
+          >
             <span className="flex size-9 items-center justify-center rounded-md bg-white text-slate-950">
               <LayoutDashboard className="size-4" />
             </span>
@@ -76,20 +79,21 @@ export default function LoginPage() {
           <div className="my-auto">
             <div className="mb-6 mt-6 inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/10 px-3 py-1 text-sm text-sky-100">
               <ShieldCheck className="size-4 text-green-400" />
-              Workspace akademik pribadi
+              <FormattedMessage id="auth.login.sidebar.badge" />
             </div>
             <h1 className="max-w-md text-4xl font-bold leading-tight">
-              Lanjutkan rencana kuliahmu dari satu dashboard.
+              <FormattedMessage id="auth.login.sidebar.title" />
             </h1>
             <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
-              Masuk untuk melihat tugas, jadwal, dan catatan yang sudah kamu
-              susun sebelumnya.
+              <FormattedMessage id="auth.login.sidebar.description" />
             </p>
 
             <div className="mt-8 overflow-hidden rounded-lg border border-white/10 bg-white/5">
               <Image
                 src="/ss/dashboard.png"
-                alt="Preview dashboard Mahasiswa Center"
+                alt={intl.formatMessage({
+                  id: "auth.login.sidebar.imageAlt",
+                })}
                 width={900}
                 height={560}
                 priority
@@ -103,7 +107,8 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="w-full max-w-md">
             <Link
               href="/"
-              className="mb-10 flex items-center gap-3 text-sm font-semibold lg:hidden">
+              className="mb-10 flex items-center gap-3 text-sm font-semibold lg:hidden"
+            >
               <span className="flex size-9 items-center justify-center rounded-md bg-slate-950 text-white">
                 <LayoutDashboard className="size-4" />
               </span>
@@ -111,19 +116,19 @@ export default function LoginPage() {
             </Link>
 
             <p className="text-sm font-bold uppercase text-sky-600">
-              Welcome back
+              <FormattedMessage id="auth.login.badge" />
             </p>
             <h2 className="mt-2 text-3xl font-bold text-slate-950">
-              Masuk ke akunmu
+              <FormattedMessage id="auth.login.title" />
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Gunakan email atau akun Google untuk kembali ke workspace kamu.
+              <FormattedMessage id="auth.login.description" />
             </p>
 
             <div className="mt-8 space-y-5">
               <div>
                 <Label htmlFor="email" className="text-slate-700">
-                  Email
+                  <FormattedMessage id="auth.fields.email" />
                 </Label>
                 <div className="relative mt-2">
                   <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -135,15 +140,18 @@ export default function LoginPage() {
                     onChange={handleChange}
                     required
                     className="h-11 pl-10"
-                    placeholder="nama@email.com"
+                    placeholder={intl.formatMessage({
+                      id: "auth.fields.emailPlaceholder",
+                    })}
                   />
                 </div>
               </div>
 
               <div>
                 <Label htmlFor="password" className="text-slate-700">
-                  Password
+                  <FormattedMessage id="auth.fields.password" />
                 </Label>
+
                 <Input
                   id="password"
                   type="password"
@@ -152,14 +160,25 @@ export default function LoginPage() {
                   onChange={handleChange}
                   required
                   className="mt-2 h-11"
-                  placeholder="Masukkan password"
+                  placeholder={intl.formatMessage({
+                    id: "auth.login.passwordPlaceholder",
+                  })}
                 />
+
+                <div className="mt-2 flex justify-end">
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-sm font-semibold text-sky-700 hover:text-sky-800"
+                  >
+                    <FormattedMessage id="auth.forgot.title" />
+                  </Link>
+                </div>
               </div>
             </div>
 
-            {error && (
+            {errorId && (
               <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                {error}
+                <FormattedMessage id={errorId} />
               </p>
             )}
 
@@ -167,14 +186,19 @@ export default function LoginPage() {
               type="submit"
               variant="outline"
               disabled={loading || googleLoading}
-              className="mt-6 h-11 w-full hover:text-slate-500">
-              {loading ? <Loader2 className="size-4 animate-spin" /> : "Masuk"}
+              className="mt-6 h-11 w-full hover:text-slate-500"
+            >
+              {loading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <FormattedMessage id="auth.login.submit" />
+              )}
               {!loading && <ArrowRight className="size-4" />}
             </Button>
 
             <div className="my-6 flex items-center gap-3 text-xs font-medium uppercase text-slate-400">
               <span className="h-px flex-1 bg-slate-200" />
-              atau
+              <FormattedMessage id="auth.common.or" />
               <span className="h-px flex-1 bg-slate-200" />
             </div>
 
@@ -183,21 +207,23 @@ export default function LoginPage() {
               variant="outline"
               onClick={handleGoogleLogin}
               disabled={loading || googleLoading}
-              className="h-11 w-full hover:text-slate-500">
+              className="h-11 w-full hover:text-slate-500"
+            >
               {googleLoading ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <Image src="/google.png" alt="Google" width={18} height={18} />
               )}
-              Lanjut dengan Google
+              <FormattedMessage id="auth.login.google" />
             </Button>
 
             <p className="mt-8 text-center text-sm text-slate-600">
-              Belum punya akun?{" "}
+              <FormattedMessage id="auth.login.noAccount" />{" "}
               <Link
                 href="/auth/register"
-                className="font-semibold text-sky-700 hover:text-sky-800">
-                Buat akun
+                className="font-semibold text-sky-700 hover:text-sky-800"
+              >
+                <FormattedMessage id="auth.login.registerLink" />
               </Link>
             </p>
           </form>

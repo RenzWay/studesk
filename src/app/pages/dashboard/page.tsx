@@ -9,6 +9,7 @@ import { ScheduleToday } from "@/components/dashboard/ScheduleToday";
 import { RecentNotes } from "@/components/dashboard/RecentNotes";
 import { LoadingDashboard } from "@/app/lib/loading";
 import { useDashboard } from "@/hooks/useDashboard";
+import { FormattedMessage } from "react-intl";
 
 export default function DashboardPage() {
   const {
@@ -29,7 +30,7 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <main className="flex min-h-[70vh] items-center justify-center text-slate-600 dark:text-slate-300">
-        Redirecting to login...
+        <FormattedMessage id="dashboard.redirecting" />
       </main>
     );
   }

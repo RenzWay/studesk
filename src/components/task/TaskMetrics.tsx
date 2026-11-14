@@ -6,7 +6,7 @@ export function TaskMetrics({ cards }: { cards: TaskMetric[] }) {
     <section className="hidden gap-4 lg:grid lg:grid-cols-3">
       {cards.map((card) => (
         <Card
-          key={card.label}
+          key={card.id}
           className="rounded-lg border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
         >
           <CardContent className="flex items-center justify-between gap-4 p-4 sm:p-5">

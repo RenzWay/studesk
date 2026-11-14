@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type SectionCardProps = {
-  title: string;
-  description: string;
+  title: ReactNode;
+  description: ReactNode;
   href: string;
-  action: string;
+  action: ReactNode;
   children: ReactNode;
 };
 

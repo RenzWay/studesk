@@ -16,8 +16,16 @@ import {
 import { EmptyNotes } from "@/components/note/EmptyNotes";
 import { formatDate } from "@/app/lib/formatdate";
 import type { NoteEntry } from "@/hooks/useNote";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useLocale } from "@/providers/IntlProvider";
 
-const categories = ["None", "Study", "Ideas", "Work", "Personal"];
+const categories = [
+  { value: "None", messageId: "notes.category.none" },
+  { value: "Study", messageId: "notes.category.study" },
+  { value: "Ideas", messageId: "notes.category.ideas" },
+  { value: "Work", messageId: "notes.category.work" },
+  { value: "Personal", messageId: "notes.category.personal" },
+];
 
 type NoteEditorProps = {
   note: NoteEntry | null;
@@ -38,6 +46,10 @@ export function NoteEditor({
   onContentChange,
   onCreate,
 }: NoteEditorProps) {
+  const intl = useIntl();
+  const { locale } = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
+
   return (
     <section
       className={`${note ? "flex" : "hidden lg:flex"} w-full min-w-0 max-w-full min-h-[72dvh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:min-h-0`}
@@ -48,7 +60,7 @@ export function NoteEditor({
             <div className="mb-3 flex items-center justify-between gap-3 lg:hidden">
               <Button variant="outline" size="sm" onClick={onBack}>
                 <ArrowLeft className="size-4" />
-                Notes
+                <FormattedMessage id="notes.header.label" />
               </Button>
               <Button
                 variant="outline"
@@ -57,7 +69,7 @@ export function NoteEditor({
                 className="text-red-600 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200"
               >
                 <Trash2 className="size-4" />
-                Delete
+                <FormattedMessage id="notes.delete" />
               </Button>
             </div>
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
@@ -68,7 +80,9 @@ export function NoteEditor({
                   onTitleChange(event.target.value)
                 }
                 className="h-11 min-w-0 border-transparent bg-slate-50 text-lg font-bold shadow-none focus-visible:border-violet-300 dark:bg-slate-950 dark:focus-visible:border-violet-800 sm:text-xl"
-                placeholder="Note title..."
+                placeholder={intl.formatMessage({
+                  id: "notes.editor.titlePlaceholder",
+                })}
               />
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 sm:flex sm:items-center">
                 <Select
@@ -77,12 +91,16 @@ export function NoteEditor({
                 >
                   <SelectTrigger className="h-11 w-full sm:w-40">
                     <Folder className="size-4 text-slate-400" />
-                    <SelectValue placeholder="Category" />
+                    <SelectValue
+                      placeholder={intl.formatMessage({
+                        id: "notes.editor.categoryPlaceholder",
+                      })}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                      <SelectItem key={category.value} value={category.value}>
+                        <FormattedMessage id={category.messageId} />
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -93,13 +111,16 @@ export function NoteEditor({
                   className="hidden text-red-600 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200 lg:inline-flex"
                 >
                   <Trash2 className="size-4" />
-                  Delete
+                  <FormattedMessage id="notes.delete" />
                 </Button>
               </div>
             </div>
             <p className="mt-3 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
               <FileText className="size-3.5" />
-              Last opened from {formatDate(note.date)}
+              <FormattedMessage
+                id="notes.editor.lastOpened"
+                values={{ date: formatDate(note.date, dateLocale) }}
+              />
             </p>
           </div>
           <Card className="min-h-0 flex-1 rounded-none border-0 bg-white py-0 shadow-none dark:bg-slate-900">
@@ -108,6 +129,9 @@ export function NoteEditor({
                 key={note.id}
                 content={note.content}
                 onChange={(html: string) => onContentChange(html)}
+                placeholder={intl.formatMessage({
+                  id: "notes.editor.placeholder",
+                })}
                 minHeight="100%"
                 className="h-full"
               />

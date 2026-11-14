@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import ModelFirestore from "@/model/model";
+import { useIntl } from "react-intl";
 
 export type NoteEntry = {
   id: string;
@@ -12,6 +13,14 @@ export type NoteEntry = {
   content?: string;
   date: string | number | Date;
   category?: string;
+};
+
+export const noteCategoryMessageIds: Record<string, string> = {
+  None: "notes.category.none",
+  Study: "notes.category.study",
+  Ideas: "notes.category.ideas",
+  Work: "notes.category.work",
+  Personal: "notes.category.personal",
 };
 
 const notesModel = new ModelFirestore();
@@ -25,6 +34,7 @@ export function stripHtml(value = "") {
 
 export function useNote() {
   const router = useRouter();
+  const intl = useIntl();
   const [notes, setNotes] = useState<NoteEntry[]>([]);
   const [selectedNote, setSelectedNote] = useState<NoteEntry | null>(null);
   const [search, setSearch] = useState("");
@@ -66,12 +76,23 @@ export function useNote() {
     const keyword = search.toLowerCase().trim();
     if (!keyword) return notes;
     return notes.filter(
-      (note) =>
-        (note.title || "").toLowerCase().includes(keyword) ||
-        stripHtml(note.content).toLowerCase().includes(keyword) ||
-        (note.category || "").toLowerCase().includes(keyword),
+      (note) => {
+        const categoryMessageId = note.category
+          ? noteCategoryMessageIds[note.category]
+          : undefined;
+        const categoryLabel = categoryMessageId
+          ? intl.formatMessage({ id: categoryMessageId })
+          : note.category || "";
+
+        return (
+          (note.title || "").toLowerCase().includes(keyword) ||
+          stripHtml(note.content).toLowerCase().includes(keyword) ||
+          (note.category || "").toLowerCase().includes(keyword) ||
+          categoryLabel.toLowerCase().includes(keyword)
+        );
+      },
     );
-  }, [notes, search]);
+  }, [intl, notes, search]);
 
   const updateSelectedNote = (changes: Partial<NoteEntry>) => {
     if (!selectedNote) return;
@@ -85,8 +106,8 @@ export function useNote() {
   const createNote = async () => {
     try {
       const created = (await notesModel.addNote({
-        title: "Untitled Note",
-        content: "<p>Write here...</p>",
+        title: intl.formatMessage({ id: "notes.untitled" }),
+        content: `<p>${intl.formatMessage({ id: "notes.editor.defaultContent" })}</p>`,
         date: new Date().toISOString(),
         category: "None",
       })) as NoteEntry;

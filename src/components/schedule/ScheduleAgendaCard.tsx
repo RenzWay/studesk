@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { EmptySchedule } from "@/components/schedule/EmptySchedule";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export type ScheduleEntry = { id: string; title: string; date: string };
 
@@ -46,24 +47,33 @@ export function ScheduleAgendaCard({
   onEdit,
   onDelete,
 }: ScheduleAgendaCardProps) {
+  const intl = useIntl();
+
   return (
     <Card className="rounded-lg border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
       <CardHeader className="gap-4 pb-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle className="text-base font-bold">Agenda</CardTitle>
+            <CardTitle className="text-base font-bold">
+              <FormattedMessage id="schedule.agenda.title" />
+            </CardTitle>
             <p className="mt-1 wrap-break-word text-sm text-slate-500 dark:text-slate-400">
               {selectedDateLabel}
             </p>
           </div>
           <div className="inline-flex w-fit items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
             <Clock3 className="size-4" />
-            {selectedSchedule.length} item
+            {intl.formatMessage(
+              { id: "schedule.agenda.itemCount" },
+              { count: selectedSchedule.length },
+            )}
           </div>
         </div>
         <form onSubmit={onAdd} className="flex flex-col gap-2 sm:flex-row">
           <Input
-            placeholder="Add schedule..."
+            placeholder={intl.formatMessage({
+              id: "schedule.agenda.addPlaceholder",
+            })}
             value={newTitle}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               onNewTitleChange(event.target.value)
@@ -72,7 +82,7 @@ export function ScheduleAgendaCard({
           />
           <Button type="submit" className="h-10 w-full sm:w-auto">
             <Plus className="size-4" />
-            Add
+            <FormattedMessage id="schedule.agenda.add" />
           </Button>
         </form>
       </CardHeader>
@@ -101,7 +111,7 @@ export function ScheduleAgendaCard({
                         onClick={() => onSave(item.id)}
                       >
                         <Check className="size-4" />
-                        Save
+                        <FormattedMessage id="schedule.agenda.save" />
                       </Button>
                       <Button
                         type="button"
@@ -110,7 +120,7 @@ export function ScheduleAgendaCard({
                         onClick={onCancelEdit}
                       >
                         <X className="size-4" />
-                        Cancel
+                        <FormattedMessage id="schedule.agenda.cancel" />
                       </Button>
                     </div>
                   </div>
@@ -122,7 +132,7 @@ export function ScheduleAgendaCard({
                       </h2>
                       <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                         <CalendarCheck className="size-3.5" />
-                        Important schedule
+                        <FormattedMessage id="schedule.agenda.important" />
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -134,7 +144,7 @@ export function ScheduleAgendaCard({
                         className="w-full sm:w-auto"
                       >
                         <Pencil className="size-4" />
-                        Edit
+                        <FormattedMessage id="schedule.agenda.edit" />
                       </Button>
                       <Button
                         type="button"
@@ -144,7 +154,7 @@ export function ScheduleAgendaCard({
                         className="w-full text-red-600 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200 sm:w-auto"
                       >
                         <Trash2 className="size-4" />
-                        Delete
+                        <FormattedMessage id="schedule.agenda.delete" />
                       </Button>
                     </div>
                   </div>

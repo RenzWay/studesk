@@ -3,6 +3,7 @@ import ModelFirestore from "@/model/model";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo, type FormEvent } from "react";
+import { useLocale } from "@/providers/IntlProvider";
 
 type ScheduleEntry = {
   id: string;
@@ -14,6 +15,7 @@ const model = new ModelFirestore();
 
 export function useSchedule() {
   const router = useRouter();
+  const { locale } = useLocale();
   const [date, setDate] = useState(new Date());
   const [schedule, setSchedule] = useState<ScheduleEntry[]>([]);
   const [newTitle, setNewTitle] = useState("");
@@ -87,12 +89,15 @@ export function useSchedule() {
     );
   }, [date, schedule]);
 
-  const selectedDateLabel = date.toLocaleDateString("id-ID", {
+  const selectedDateLabel = date.toLocaleDateString(
+    locale === "id" ? "id-ID" : "en-US",
+    {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
-  });
+    },
+  );
 
   const upcomingCount = useMemo(() => {
     const startToday = new Date();

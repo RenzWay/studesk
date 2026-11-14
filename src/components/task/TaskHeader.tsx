@@ -1,5 +1,6 @@
 import { CheckSquare, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FormattedMessage } from "react-intl";
 
 export function TaskHeader({ onCreate }: { onCreate: () => void }) {
   return (
@@ -8,19 +9,18 @@ export function TaskHeader({ onCreate }: { onCreate: () => void }) {
         <div className="min-w-0">
           <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-sky-100 bg-sky-50 px-3 py-1 text-sm font-medium text-sky-700 dark:border-sky-900 dark:bg-sky-950/50 dark:text-sky-300">
             <CheckSquare className="size-4" />
-            Tasks
+            <FormattedMessage id="tasks.header.label" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Organize your work queue
+            <FormattedMessage id="tasks.header.title" />
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
-            Track assignments, deadlines, and small wins without making the
-            workspace feel heavy.
+            <FormattedMessage id="tasks.header.description" />
           </p>
         </div>
         <Button onClick={onCreate} className="h-10 w-full lg:w-auto">
           <Plus className="size-4" />
-          Add Task
+          <FormattedMessage id="tasks.add" />
         </Button>
       </div>
     </header>

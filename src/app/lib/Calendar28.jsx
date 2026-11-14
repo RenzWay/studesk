@@ -8,14 +8,15 @@ import {Calendar} from "@/components/ui/calendar"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
+import { FormattedMessage, useIntl } from "react-intl"
+import { useLocale } from "@/providers/IntlProvider"
+import { format, isValid, parse } from "date-fns"
+import { enUS, id } from "date-fns/locale"
+import { useEffect } from "react"
 
-function formatDate(date) {
+function formatDate(date, locale) {
     if (!date) return ""
-    return date.toLocaleDateString("en-US", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-    })
+    return format(date, "PPP", { locale })
 }
 
 function isValidDate(date) {
@@ -24,9 +25,16 @@ function isValidDate(date) {
 
 export function Calendar28({title, setDate}) {
     const [open, setOpen] = useState(false)
+    const intl = useIntl()
+    const { locale } = useLocale()
+    const dateFnsLocale = locale === "id" ? id : enUS
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [month, setMonth] = useState(selectedDate)
-    const [value, setValue] = useState(formatDate(selectedDate))
+    const [value, setValue] = useState(formatDate(selectedDate, dateFnsLocale))
+
+    useEffect(() => {
+        setValue(formatDate(selectedDate, dateFnsLocale))
+    }, [dateFnsLocale, selectedDate])
 
     return (
         <div className="flex flex-col gap-3">
@@ -39,10 +47,20 @@ export function Calendar28({title, setDate}) {
                     <Input
                         id="date"
                         value={value}
-                        placeholder="June 01, 2025"
+                        placeholder={intl.formatMessage({
+                            id: "tasks.dialog.datePlaceholder",
+                        })}
                         className="bg-background pr-10"
                         onChange={(e) => {
-                            const newDate = new Date(e.target.value)
+                            const parsedDate = parse(
+                                e.target.value,
+                                "PPP",
+                                new Date(),
+                                { locale: dateFnsLocale },
+                            )
+                            const newDate = isValid(parsedDate)
+                                ? parsedDate
+                                : new Date(e.target.value)
                             setValue(e.target.value)
                             if (isValidDate(newDate)) {
                                 setSelectedDate(newDate)
@@ -65,7 +83,9 @@ export function Calendar28({title, setDate}) {
                             className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-gray-500 hover:text-foreground"
                         >
                             <CalendarIcon className="h-4 w-4"/>
-                            <span className="sr-only">Select date</span>
+                            <span className="sr-only">
+                                <FormattedMessage id="tasks.dialog.selectDate" />
+                            </span>
                         </Button>
                     </PopoverTrigger>
                 </div>
@@ -84,7 +104,7 @@ export function Calendar28({title, setDate}) {
                         onMonthChange={setMonth}
                         onSelect={(d) => {
                             setSelectedDate(d)
-                            setValue(formatDate(d))
+                            setValue(formatDate(d, dateFnsLocale))
                             setOpen(false)
                             setDate?.(d)
                         }}

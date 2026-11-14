@@ -3,6 +3,7 @@
 import { CalendarDays } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormattedMessage } from "react-intl";
 
 export function ScheduleCalendarCard({
   date,
@@ -16,10 +17,10 @@ export function ScheduleCalendarCard({
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-bold">
           <CalendarDays className="size-4 text-emerald-600 dark:text-emerald-300" />
-          Calendar
+          <FormattedMessage id="schedule.calendar.title" />
         </CardTitle>
         <p className="text-sm text-slate-500 dark:text-slate-400">
-          Choose the day you want to organize.
+          <FormattedMessage id="schedule.calendar.description" />
         </p>
       </CardHeader>
       <CardContent>

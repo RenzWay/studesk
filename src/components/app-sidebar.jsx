@@ -25,12 +25,17 @@ import Image from "next/image";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import { DropdownFooterSidebar } from "@/app/lib/dropdown";
+import { FormattedMessage } from "react-intl";
 
 const menuItems = [
-  { name: "Dashboard", icon: LayoutDashboard, href: "/pages/dashboard" },
-  { name: "Task", icon: CheckSquare, href: "/task" },
-  { name: "Schedule", icon: CalendarDays, href: "/schedule" },
-  { name: "Note", icon: NotebookPen, href: "/note" },
+  {
+    labelId: "navigation.dashboard",
+    icon: LayoutDashboard,
+    href: "/pages/dashboard",
+  },
+  { labelId: "navigation.tasks", icon: CheckSquare, href: "/task" },
+  { labelId: "navigation.schedule", icon: CalendarDays, href: "/schedule" },
+  { labelId: "navigation.notes", icon: NotebookPen, href: "/note" },
 ];
 
 export function AppSidebar() {
@@ -64,19 +69,14 @@ export function AppSidebar() {
             className="mb-4 flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
           >
             <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-white shadow-sm dark:bg-slate-950">
-              <Image
-                src="/colleger.png"
-                width={26}
-                height={26}
-                alt="Mahasiswa Center icon"
-              />
+              <Image src="/colleger.png" width={26} height={26} alt="Studesk" />
             </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-bold text-slate-950 dark:text-slate-50">
-                Mahasiswa Center
+                Studesk
               </span>
               <span className="block truncate text-xs text-slate-500 dark:text-slate-400">
-                Academic workspace
+                <FormattedMessage id="sidebar.academicWorkspace" />
               </span>
             </span>
           </Link>
@@ -94,7 +94,9 @@ export function AppSidebar() {
                       <span className="flex size-7 items-center justify-center rounded-md bg-slate-100 text-slate-600 group-data-[active=true]/menu-button:bg-white/15 group-data-[active=true]/menu-button:text-current dark:bg-slate-900 dark:text-slate-400 dark:group-data-[active=true]/menu-button:bg-slate-950/10">
                         <item.icon className="size-4" />
                       </span>
-                      <span className="font-medium">{item.name}</span>
+                      <span className="font-medium">
+                        <FormattedMessage id={item.labelId} />
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -108,7 +110,6 @@ export function AppSidebar() {
         <Separator className="my-3 bg-slate-200 dark:bg-slate-800" />
         <DropdownFooterSidebar
           theme={theme}
-          setTheme={setTheme}
           toggleTheme={toggleTheme}
           user={user}
         />

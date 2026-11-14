@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { auth } from "@/firebase/firebase";
 import ModelFirestore from "@/model/model";
+import { useIntl } from "react-intl";
 
 export type TaskDate = string | number | Date | { toDate: () => Date };
 export type TaskEntry = {
@@ -21,6 +22,7 @@ export type TaskEntry = {
 };
 export type TaskScope = "all" | "active" | "complete";
 export type TaskMetric = {
+  id: string;
   label: string;
   value: number;
   helper: string;
@@ -58,6 +60,7 @@ export function isTaskOverdue(task: TaskEntry) {
 
 export function useTask() {
   const router = useRouter();
+  const intl = useIntl();
   const [tasks, setTasks] = useState<TaskEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
@@ -109,25 +112,28 @@ export function useTask() {
 
   const metricCards: TaskMetric[] = [
     {
-      label: "Active",
+      id: "active",
+      label: intl.formatMessage({ id: "tasks.metrics.active" }),
       value: activeTasks.length,
-      helper: "tasks in progress",
+      helper: intl.formatMessage({ id: "tasks.metrics.activeHelper" }),
       icon: CheckSquare,
       color:
         "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-300",
     },
     {
-      label: "Due Today",
+      id: "dueToday",
+      label: intl.formatMessage({ id: "tasks.metrics.dueToday" }),
       value: todayTasks.length,
-      helper: "scheduled for today",
+      helper: intl.formatMessage({ id: "tasks.metrics.dueTodayHelper" }),
       icon: CalendarDays,
       color:
         "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900 dark:bg-violet-950/40 dark:text-violet-300",
     },
     {
-      label: "Overdue",
+      id: "overdue",
+      label: intl.formatMessage({ id: "tasks.metrics.overdue" }),
       value: overdueTasks.length,
-      helper: "need attention",
+      helper: intl.formatMessage({ id: "tasks.metrics.overdueHelper" }),
       icon: Clock3,
       color:
         "border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300",

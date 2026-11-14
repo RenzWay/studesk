@@ -4,6 +4,8 @@ import { SectionCard } from "@/components/dashboard/SectionCard";
 import { EmptyState } from "@/components/EmptyState";
 import { formatDate } from "@/app/lib/formatdate";
 import type { DashboardTask } from "@/hooks/useDashboard";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useLocale } from "@/providers/IntlProvider";
 
 export function UpcomingTasks({
   tasks,
@@ -12,13 +14,19 @@ export function UpcomingTasks({
   tasks: DashboardTask[];
   activeCount: number;
 }) {
+  const intl = useIntl();
+  const { locale } = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
   const visibleTasks = tasks.slice(0, 4);
   return (
     <SectionCard
-      title="Upcoming Tasks"
-      description={`${activeCount} task masih aktif`}
+      title={<FormattedMessage id="dashboard.upcomingTasks" />}
+      description={intl.formatMessage(
+        { id: "dashboard.upcomingTasksDescription" },
+        { count: activeCount },
+      )}
       href="/task"
-      action="Open"
+      action={<FormattedMessage id="dashboard.open" />}
     >
       {visibleTasks.length ? (
         visibleTasks.map((task) => (
@@ -38,7 +46,7 @@ export function UpcomingTasks({
               </p>
               <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                 <CalendarDays className="size-3" />
-                {formatDate(task.date)}
+                {formatDate(task.date, dateLocale)}
               </p>
             </div>
             {task.complete && (
@@ -47,7 +55,7 @@ export function UpcomingTasks({
           </div>
         ))
       ) : (
-        <EmptyState label="No task yet" />
+        <EmptyState label={<FormattedMessage id="dashboard.noTasks" />} />
       )}
     </SectionCard>
   );

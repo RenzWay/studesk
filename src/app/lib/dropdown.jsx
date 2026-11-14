@@ -1,6 +1,6 @@
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { EllipsisVertical, LogOut, Moon, Sun } from "lucide-react";
+import { EllipsisVertical, Languages, LogOut, Moon, Sun } from "lucide-react";
 import ModelFirestore from "@/model/model";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,18 +12,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useLocale } from "@/providers/IntlProvider";
 
 const model = new ModelFirestore();
 
-export function DropdownFooterSidebar({ theme, setTheme, toggleTheme, user }) {
+export function DropdownFooterSidebar({ theme, toggleTheme, user }) {
   const router = useRouter();
+  const intl = useIntl();
+  const { locale, changeLocale } = useLocale();
+
   const handleLogout = async () => {
     try {
       await model.logout();
+      window.alert(intl.formatMessage({ id: "sidebar.logout.success" }));
       router.push("/");
-      //   router.push("/auth/register");
-    } catch (e) {
-      console.error("Error logging out:", e);
+    } catch (error) {
+      console.error("Error logging out:", error);
+      window.alert(intl.formatMessage({ id: "sidebar.logout.error" }));
     }
   };
 
@@ -39,7 +45,7 @@ export function DropdownFooterSidebar({ theme, setTheme, toggleTheme, user }) {
               <Avatar className="size-9 shrink-0 border border-slate-200 dark:border-slate-700">
                 <AvatarImage
                   src={user?.photoURL || undefined}
-                  alt={user?.displayName || "User Avatar"}
+                  alt={intl.formatMessage({ id: "sidebar.avatarAlt" })}
                 />
                 <AvatarFallback className="bg-slate-950 text-xs font-bold text-white dark:bg-white dark:text-slate-950">
                   {user?.displayName ? user.displayName[0].toUpperCase() : "?"}
@@ -47,13 +53,15 @@ export function DropdownFooterSidebar({ theme, setTheme, toggleTheme, user }) {
               </Avatar>
               <div className="min-w-0 text-left">
                 <span className="block truncate text-sm font-semibold leading-tight text-slate-900 dark:text-slate-50">
-                  {user?.displayName || "User"}
+                  {user?.displayName ||
+                    intl.formatMessage({ id: "sidebar.userFallback" })}
                 </span>
                 <p
                   title={user?.email}
                   className="max-w-35 truncate text-xs text-slate-500 dark:text-slate-400"
                 >
-                  {user?.email || "No email"}
+                  {user?.email ||
+                    intl.formatMessage({ id: "sidebar.noEmail" })}
                 </p>
               </div>
             </div>
@@ -67,21 +75,38 @@ export function DropdownFooterSidebar({ theme, setTheme, toggleTheme, user }) {
           align="start"
           side="top"
         >
-          <DropdownMenuLabel>Account Settings</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            <FormattedMessage id="sidebar.accountSettings" />
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => changeLocale(locale === "id" ? "en" : "id")}
+          >
+            <Languages className="mr-2 h-4 w-4" />
+            <FormattedMessage
+              id={
+                locale === "id"
+                  ? "common.language.english"
+                  : "common.language.indonesian"
+              }
+            />
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={toggleTheme}>
             {theme === "light" ? (
               <>
-                <Sun className="mr-2 h-4 w-4" /> Dark Mode
+                <Sun className="mr-2 h-4 w-4" />
+                <FormattedMessage id="sidebar.theme.dark" />
               </>
             ) : (
               <>
-                <Moon className="mr-2 h-4 w-4" /> Light Mode
+                <Moon className="mr-2 h-4 w-4" />
+                <FormattedMessage id="sidebar.theme.light" />
               </>
             )}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" /> Logout
+            <LogOut className="mr-2 h-4 w-4" />
+            <FormattedMessage id="sidebar.logout" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

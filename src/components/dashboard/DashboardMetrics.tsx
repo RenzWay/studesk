@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 type MetricCard = {
+  id: string;
   label: string;
   value: number;
   helper: string;
@@ -20,7 +21,7 @@ export function DashboardMetrics({ cards }: { cards: MetricCard[] }) {
     <section className="hidden gap-4 md:grid md:grid-cols-3">
       {cards.map((card, index) => (
         <motion.div
-          key={card.label}
+          key={card.id}
           variants={cardMotion}
           initial="initial"
           animate="animate"

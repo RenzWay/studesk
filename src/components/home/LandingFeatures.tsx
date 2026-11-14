@@ -3,50 +3,50 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CalendarDays, CheckSquare, NotebookPen } from "lucide-react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const features = [
   {
-    title: "Collect Your Tasks",
+    titleId: "landing.features.tasks.title",
+    descriptionId: "landing.features.tasks.description",
     icon: CheckSquare,
-    description:
-      "Easily manage and keep track of your college assignments with priority tags.",
     color: "text-emerald-600 bg-emerald-50 border-emerald-100",
     img: "/ss/task.png",
   },
   {
-    title: "Schedule Your Days",
+    titleId: "landing.features.schedule.title",
+    descriptionId: "landing.features.schedule.description",
     icon: CalendarDays,
-    description:
-      "Plan your schedule for tomorrow and never miss a class or task again.",
     color: "text-sky-600 bg-sky-50 border-sky-100",
     img: "/ss/schedule.png",
   },
   {
-    title: "Personal Notes",
+    titleId: "landing.features.notes.title",
+    descriptionId: "landing.features.notes.description",
     icon: NotebookPen,
-    description:
-      "Write and organize your own study notes effectively and efficiently.",
     color: "text-violet-600 bg-violet-50 border-violet-100",
     img: "/ss/note.png",
   },
 ];
 
 export function LandingFeatures() {
+  const intl = useIntl();
+
   return (
     <section id="features" className="border-y border-slate-200 bg-white py-16">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="mb-8 max-w-2xl">
           <p className="text-sm font-bold uppercase text-sky-600">
-            Fitur utama
+            <FormattedMessage id="landing.features.label" />
           </p>
           <h2 className="mt-2 text-3xl font-bold text-slate-950">
-            Simple, tapi cukup buat dipakai harian.
+            <FormattedMessage id="landing.features.title" />
           </h2>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {features.map((feature, index) => (
             <motion.article
-              key={feature.title}
+              key={feature.titleId}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
@@ -56,7 +56,12 @@ export function LandingFeatures() {
               <div className="aspect-16/10 overflow-hidden border-b border-slate-200 bg-slate-100">
                 <Image
                   src={feature.img}
-                  alt={`Preview ${feature.title}`}
+                  alt={intl.formatMessage(
+                    { id: "landing.features.imageAlt" },
+                    {
+                      title: intl.formatMessage({ id: feature.titleId }),
+                    },
+                  )}
                   width={720}
                   height={450}
                   className="h-full w-full object-cover object-top"
@@ -69,10 +74,10 @@ export function LandingFeatures() {
                   <feature.icon className="size-5" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-950">
-                  {feature.title}
+                  <FormattedMessage id={feature.titleId} />
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {feature.description}
+                  <FormattedMessage id={feature.descriptionId} />
                 </p>
               </div>
             </motion.article>

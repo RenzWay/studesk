@@ -6,20 +6,28 @@ import {Command, CommandGroup, CommandInput, CommandItem, CommandList} from "@/c
 import {Check} from "lucide-react";
 import {useState} from "react";
 import {cn} from "@/lib/utils";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export function HeadingTool({editor, headings}) {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
+    const intl = useIntl()
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline">Heading</Button>
+                <Button variant="outline">
+                    <FormattedMessage id="notes.editor.heading" />
+                </Button>
                 {/*<ChevronsUpDown/>*/}
             </PopoverTrigger>
             <PopoverContent className="w-40 p-0">
                 <Command>
-                    <CommandInput placeholder="Pilih Heading..."/>
+                    <CommandInput
+                        placeholder={intl.formatMessage({
+                            id: "notes.editor.headingSearch",
+                        })}
+                    />
                     <CommandList>
                         <CommandGroup>
                             {headings.map((level) => (

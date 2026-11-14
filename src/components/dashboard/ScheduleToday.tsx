@@ -2,15 +2,19 @@ import { SectionCard } from "@/components/dashboard/SectionCard";
 import { EmptyState } from "@/components/EmptyState";
 import { formatDate } from "@/app/lib/formatdate";
 import type { DashboardScheduleItem } from "@/hooks/useDashboard";
+import { FormattedMessage } from "react-intl";
+import { useLocale } from "@/providers/IntlProvider";
 
 export function ScheduleToday({ items }: { items: DashboardScheduleItem[] }) {
+  const { locale } = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
   const visibleItems = items.slice(0, 3);
   return (
     <SectionCard
-      title="Schedule Today"
-      description="Agenda yang perlu kamu lihat sekarang"
+      title={<FormattedMessage id="dashboard.scheduleToday" />}
+      description={<FormattedMessage id="dashboard.scheduleDescription" />}
       href="/schedule"
-      action="Schedule"
+      action={<FormattedMessage id="dashboard.scheduleAction" />}
     >
       {visibleItems.length ? (
         visibleItems.map((item) => (
@@ -25,12 +29,12 @@ export function ScheduleToday({ items }: { items: DashboardScheduleItem[] }) {
               {item.title}
             </p>
             <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-300">
-              {formatDate(item.date)}
+              {formatDate(item.date, dateLocale)}
             </p>
           </div>
         ))
       ) : (
-        <EmptyState label="No schedule today" />
+        <EmptyState label={<FormattedMessage id="dashboard.noSchedule" />} />
       )}
     </SectionCard>
   );

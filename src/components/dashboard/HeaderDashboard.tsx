@@ -4,6 +4,7 @@ import type { User } from "firebase/auth";
 import Link from "next/link";
 import { Clock3, LayoutDashboard, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FormattedMessage } from "react-intl";
 
 type HeaderHomeProps = {
   user: Pick<User, "displayName" | "email">;
@@ -22,14 +23,16 @@ export function HeaderHome({
         <div className="min-w-0">
           <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-sky-100 bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-700 dark:border-sky-900 dark:bg-sky-950/60 dark:text-sky-300 sm:text-sm">
             <LayoutDashboard className="size-4" />
-            Dashboard
+            <FormattedMessage id="dashboard.title" />
           </div>
           <h1 className="wrap-break-word text-xl font-bold tracking-tight sm:text-3xl">
-            Selamat datang, {user.displayName || user.email}
+            <FormattedMessage
+              id="dashboard.welcome"
+              values={{ name: user.displayName || user.email }}
+            />
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
-            Lihat tugas yang aktif, agenda hari ini, dan catatan terbaru tanpa
-            pindah halaman dulu.
+            <FormattedMessage id="dashboard.description" />
           </p>
         </div>
         <div className="flex min-w-0 flex-col justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950 sm:p-4 md:w-72">
@@ -47,7 +50,7 @@ export function HeaderHome({
           <Button asChild className="h-9">
             <Link href="/task">
               <Plus className="size-4" />
-              Add Task
+              <FormattedMessage id="dashboard.addTask" />
             </Link>
           </Button>
         </div>

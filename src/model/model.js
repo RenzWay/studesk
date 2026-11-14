@@ -62,21 +62,14 @@ export default class ModelFirestore {
             const user = result.user;
             console.log("User signed in with Google:", user);
             return user
-        } catch (e) {
-            console.error(e);
-            throw new Error(e);
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 
     async logout() {
-        try {
-            await auth.signOut();
-            alert("You Logout Successfully");
-        } catch (e) {
-            alert("You Logout Error!");
-            console.error(e);
-            throw new Error(e);
-        }
+        await auth.signOut();
     }
 
 

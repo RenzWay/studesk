@@ -8,7 +8,14 @@ import Footer from "@/app/lib/footer";
 
 export default function ClientLayout({ children }) {
   const loc = usePathname();
-  const hidePaths = ["/", "/auth/login", "/auth/register", "/contact", "/test"];
+  const hidePaths = [
+    "/",
+    "/auth/login",
+    "/auth/register",
+    "/contact",
+    "/test",
+    "/auth/forgot-password",
+  ];
   const hideSidebar = hidePaths.some((p) => loc === p);
 
   return (

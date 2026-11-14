@@ -16,6 +16,9 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/app/lib/formatdate";
 import { isTaskOverdue, type TaskEntry, type TaskScope } from "@/hooks/useTask";
+import { FormattedMessage } from "react-intl";
+import { useLocale } from "@/providers/IntlProvider";
+import type { ReactNode } from "react";
 
 type TaskListProps = {
   tasks: TaskEntry[];
@@ -42,29 +45,33 @@ export function TaskList({
     <Card className="rounded-lg border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
       <CardHeader className="gap-4">
         <div>
-          <CardTitle className="text-base font-bold">Task List</CardTitle>
+          <CardTitle className="text-base font-bold">
+            <FormattedMessage id="tasks.list.title" />
+          </CardTitle>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Drag to reorder locally, check off what is done.
+            <FormattedMessage id="tasks.list.description" />
           </p>
         </div>
         <Tabs defaultValue="all" className="w-full">
           <TabsList className="grid h-auto w-full grid-cols-3 rounded-md bg-slate-100 p-1 dark:bg-slate-950">
             <TabsTrigger value="all" className="rounded-sm">
-              All
+              <FormattedMessage id="tasks.list.tabAll" />
             </TabsTrigger>
             <TabsTrigger value="active" className="rounded-sm">
-              Active
+              <FormattedMessage id="tasks.list.tabActive" />
             </TabsTrigger>
             <TabsTrigger value="complete" className="rounded-sm">
-              Done
+              <FormattedMessage id="tasks.list.tabDone" />
             </TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="mt-4">
             <TaskItems
               items={tasks}
               scope="all"
-              emptyTitle="No task yet"
-              emptyDescription="Add your first assignment or daily focus item."
+              emptyTitle={<FormattedMessage id="tasks.list.emptyAllTitle" />}
+              emptyDescription={
+                <FormattedMessage id="tasks.list.emptyAllDescription" />
+              }
               onCreate={onCreate}
               onReorder={onReorder}
               onComplete={onComplete}
@@ -76,8 +83,12 @@ export function TaskList({
             <TaskItems
               items={activeTasks}
               scope="active"
-              emptyTitle="No active task"
-              emptyDescription="Everything is clear for now. Add a new task when something comes up."
+              emptyTitle={
+                <FormattedMessage id="tasks.list.emptyActiveTitle" />
+              }
+              emptyDescription={
+                <FormattedMessage id="tasks.list.emptyActiveDescription" />
+              }
               onCreate={onCreate}
               onReorder={onReorder}
               onComplete={onComplete}
@@ -89,8 +100,12 @@ export function TaskList({
             <TaskItems
               items={completedTasks}
               scope="complete"
-              emptyTitle="No completed task"
-              emptyDescription="Complete a task and it will show up here."
+              emptyTitle={
+                <FormattedMessage id="tasks.list.emptyDoneTitle" />
+              }
+              emptyDescription={
+                <FormattedMessage id="tasks.list.emptyDoneDescription" />
+              }
               onCreate={onCreate}
               onReorder={onReorder}
               onComplete={onComplete}
@@ -107,8 +122,8 @@ export function TaskList({
 type TaskItemsProps = {
   items: TaskEntry[];
   scope: TaskScope;
-  emptyTitle: string;
-  emptyDescription: string;
+  emptyTitle: ReactNode;
+  emptyDescription: ReactNode;
   onCreate: () => void;
   onReorder: (items: TaskEntry[], scope: TaskScope) => void;
   onComplete: (id: string) => void;
@@ -139,7 +154,7 @@ function TaskItems({
         </p>
         <Button onClick={onCreate} className="mt-5">
           <Plus className="size-4" />
-          Add Task
+          <FormattedMessage id="tasks.add" />
         </Button>
       </div>
     );
@@ -176,6 +191,8 @@ function TaskCard({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const { locale } = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
   const overdue = isTaskOverdue(task);
   return (
     <article
@@ -197,18 +214,18 @@ function TaskCard({
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1 dark:border-slate-800 dark:bg-slate-950">
                 <CalendarDays className="size-3.5" />
-                {formatDate(task.date)}
+                {formatDate(task.date, dateLocale)}
               </span>
               {task.complete && (
                 <span className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-100 px-2 py-1 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">
                   <CheckCircle2 className="size-3.5" />
-                  Completed
+                  <FormattedMessage id="tasks.list.completed" />
                 </span>
               )}
               {overdue && (
                 <span className="inline-flex items-center gap-1 rounded-md border border-red-200 bg-red-100 px-2 py-1 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
                   <Clock3 className="size-3.5" />
-                  Overdue
+                  <FormattedMessage id="tasks.list.overdue" />
                 </span>
               )}
             </div>
@@ -223,7 +240,7 @@ function TaskCard({
             className="w-full sm:w-auto"
           >
             <Pencil className="size-4" />
-            Edit
+            <FormattedMessage id="tasks.list.edit" />
           </Button>
           <Button
             type="button"
@@ -233,7 +250,7 @@ function TaskCard({
             className="w-full text-red-600 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200 sm:w-auto"
           >
             <Trash2 className="size-4" />
-            Delete
+            <FormattedMessage id="tasks.list.delete" />
           </Button>
         </div>
       </div>
