@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1072398170302",
+    "project_id": "mahasiswa-center-fc372",
+    "storage_bucket": "mahasiswa-center-fc372.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072398170302:android:5d859d4666b9880acf06ef",
+        "android_client_info": {
+          "package_name": "com.renz.studesk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1072398170302-fmhrebcq260uih70ofk2sg8q5bodvpqf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.renz.studesk",
+            "certificate_hash": "cbc9076268fd2b30145591f7a23c0a27bc9bcc41"
+          }
+        },
+        {
+          "client_id": "1072398170302-rfmskee6uurjp2t8rotrukk5qmselldl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH0_w-FvSk6xJf_pmYEg7Nnb8xTZ2axHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072398170302-rfmskee6uurjp2t8rotrukk5qmselldl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

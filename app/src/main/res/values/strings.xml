@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">Studesk</string>
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to continue</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_or">or</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_register_link">Register</string>
+    <string name="action_show_password">Show password</string>
+    <string name="action_hide_password">Hide password</string>
+    <string name="login_error_empty">Email and password are required.</string>
+    <string name="sign_out">Sign Out</string>
+
+    <string name="register_title">Create your account</string>
+    <string name="register_subtitle">Start organizing your studies in one place</string>
+    <string name="field_name">Full name</string>
+    <string name="register_button">Create account</string>
+    <string name="register_google_hint">You can also sign in with Google from the login page. A new account is created automatically.</string>
+    <string name="register_has_account">Already have an account?</string>
+    <string name="register_login_link">Sign in</string>
+    <string name="register_error_empty">Name, email and password are required.</string>
+    <string name="register_error_password_short">Password must be at least 6 characters.</string>
+
+    <string name="auth_error_invalid_credentials">Incorrect email or password.</string>
+    <string name="auth_error_invalid_email">Invalid email address.</string>
+    <string name="auth_error_email_in_use">This email is already registered.</string>
+    <string name="auth_error_weak_password">Password is too weak. Use at least 6 characters.</string>
+    <string name="auth_error_user_disabled">This account has been disabled.</string>
+    <string name="auth_error_too_many_requests">Too many attempts. Please try again later.</string>
+    <string name="auth_error_network">No internet connection. Check your connection and try again.</string>
+    <string name="auth_error_google_unavailable">Google sign-in isn\'t available right now. Check your internet connection and the Google account on this device, then try again.</string>
+    <string name="auth_error_unknown">Something went wrong. Please try again.</string>
 </resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Studesk</string>
+    <string name="login_title">Selamat datang kembali</string>
+    <string name="login_subtitle">Masuk untuk melanjutkan</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Kata sandi</string>
+    <string name="login_forgot_password">Lupa kata sandi?</string>
+    <string name="login_button">Masuk</string>
+    <string name="login_or">atau</string>
+    <string name="login_google">Lanjutkan dengan Google</string>
+    <string name="login_no_account">Belum punya akun?</string>
+    <string name="login_register_link">Daftar</string>
+    <string name="action_show_password">Tampilkan kata sandi</string>
+    <string name="action_hide_password">Sembunyikan kata sandi</string>
+    <string name="login_error_empty">Email dan kata sandi wajib diisi.</string>
+    <string name="sign_out">Keluar</string>
+
+    <string name="register_title">Buat akunmu</string>
+    <string name="register_subtitle">Mulai atur kuliahmu di satu tempat</string>
+    <string name="field_name">Nama lengkap</string>
+    <string name="register_button">Buat akun</string>
+    <string name="register_google_hint">Kamu juga bisa masuk dengan Google dari halaman login. Akun baru dibuat otomatis.</string>
+    <string name="register_has_account">Sudah punya akun?</string>
+    <string name="register_login_link">Masuk</string>
+    <string name="register_error_empty">Nama, email, dan kata sandi wajib diisi.</string>
+    <string name="register_error_password_short">Kata sandi minimal 6 karakter.</string>
+
+    <string name="auth_error_invalid_credentials">Email atau kata sandi salah.</string>
+    <string name="auth_error_invalid_email">Format email tidak valid.</string>
+    <string name="auth_error_email_in_use">Email ini sudah terdaftar.</string>
+    <string name="auth_error_weak_password">Kata sandi terlalu lemah. Gunakan minimal 6 karakter.</string>
+    <string name="auth_error_user_disabled">Akun ini telah dinonaktifkan.</string>
+    <string name="auth_error_too_many_requests">Terlalu banyak percobaan. Coba lagi nanti.</string>
+    <string name="auth_error_network">Tidak ada koneksi internet. Periksa koneksimu lalu coba lagi.</string>
+    <string name="auth_error_google_unavailable">Login Google sedang tidak tersedia. Periksa koneksi internet dan akun Google di perangkat ini, lalu coba lagi.</string>
+    <string name="auth_error_unknown">Terjadi kesalahan. Silakan coba lagi.</string>
+</resources>
